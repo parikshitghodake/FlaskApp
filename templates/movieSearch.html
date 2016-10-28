@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Movie Search</title>
+ 
+    
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="../static/signup.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <style>
+        .MovieDetails{
+            font-family: segoe ui;
+            font-size: 14px;
+            text-align: left;
+            margin-right: 10px;
+            margin-left: 20px;
+            width : 70%;
+            float : left;
+        }
+        .imgWrapper{
+            width : 20%;
+        }
+    </style>    
+    <script>
+        $(document).ready(function(){
+     $('#btnSearchMovie').click(function () {
+    var c = $('.form-Search').serialize();
+    var d = 'http://www.omdbapi.com/?' + c;
+    var g = $('#search-by-title-response');
+    var details = null;
+    $.ajax({
+        type: 'GET',
+        dataType: 'text',
+        url: 'http://www.omdbapi.com/?' + c,
+        statusCode: {
+                    403: function () {
+                g.html('HTTP 403 Forbidden!')
+            }
+        },
+        success: function (a) {
+                details = a;
+           // g.find('pre').html(a.replace(/</g, '&lt;').replace(/>/g, '&gt;'))
+                console.log(details);
+            var obj = JSON.parse(details);
+                            $('#MovieDetailsName').html(obj.Title); 
+                            $('#MovieDetailsYear').html(obj.Year) ;
+                            $('#MovieDetailsGenere').html(obj.Genre) ;
+                            $('#MovieDetailsDirector').html(obj.Director); 
+                            $('#MovieDetailsWriter').html(obj.Writer) ;
+                            $('#MovieDetailsActor').html(obj.Actors) ;
+                            $('#MovieDetailsPlot').html(obj.Plot) ;
+                    $('#MovieCover').attr("src",obj.Poster);
+        },
+        complete: function () {
+            g.show('slow')
+        }
+    })
+    
+         
+});
+        });
+        </script>
+      
+      
+  </head>
+ 
+  <body>
+ 
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" ><a href="main">Home</a></li>
+            <li role="presentation"><a href="#">Sign In</a></li>
+            <li role="presentation"><a href="#">Sign Up</a></li>
+            <li role="presentation" class="active"><a href="#">Search</a></li>  
+          </ul>
+        </nav>
+        <h3 class="text-muted">Flask Movie App</h3>
+      </div>
+ 
+      <div class="jumbotron">
+        <h1>Search a Movie </h1>
+        <form class="form-Search">
+        <label for="inputName" style = "margin-bottom:10px;" class="sr-only">Movie Name</label>
+        <input type="name" style = "margin-bottom:10px;" name="t" id="t" class="form-control" placeholder="Name" required autofocus>
+            <button id="btnSearchMovie" style = "margin-bottom:10px;" class="btn btn-lg btn-primary btn-block" type="button">Search</button>
+            
+        <div id="search-by-title-response" style = "margin-bottom:10px;">
+                <pre>
+                <div class= "imgWrapper"><img id="MovieCover" style = "height:200px;float:left;" src=""/></div>
+                <div class="MovieDetails">
+                <div id="MovieDetailsName"></div>
+                <div id="MovieDetailsYear"></div>
+                <div id="MovieDetailsGenere"></div>
+                <div id="MovieDetailsDirector"></div>
+                <div id="MovieDetailsWriter"></div>
+                <div id="MovieDetailsActor"></div>
+                <div id="MovieDetailsPlot"></div>
+                </div>
+                </pre>
+        </div>
+      </form>
+      </div> 
+      <footer class="footer">
+        <p>&copy; Company 2016</p>
+      </footer>
+ 
+    </div>
+  </body>
+</html>
